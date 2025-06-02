@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generar código QR</title>
+    <link href="../public/css/styles_Parvada.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+
+<body>
+
+    <div class="container">
+        <a href="index.html" class="back-arrow">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+
+        <img src="..\Assets\PARVADA.png" alt="Generador QR" class="logo-generador">
+        <form action="/procesar-formulario" method="post">
+
+            <div class="form-group">
+                <label for="folio">Folio:</label>
+                <input type="text" id="folio" name="folio" required onchange="verificarFolio(this.value)">
+                <div id="folio-message" class="message"></div>
+            </div>
+
+
+            <div class="form-group">
+                <label for="nombre-receptor">Nombre del Receptor:</label>
+                <div class="input-group">
+                    <input type="text" id="nombre-receptor" name="nombre-receptor">
+                    <button type="button" id="buscar-receptor-btn" class="search-button">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label>Seleccione las clasificaciones:</label>
+                <div id="clasificaciones-container">
+                </div>
+                <span id="cantidad-message" style="color: red;"></span>
+            </div>
+
+      
+            <div class="checkbox-group" style="margin-top: 20px">
+                <input type="checkbox" id="toggle-name-input">
+                <label for="toggle-name-input">Cambiar nombre destinatario</label>
+            </div>
+            <div id="name-input-container" style="display: none;">
+                <input type="text" id="manual-name" placeholder="Ingresa el nombre del destinatario">
+            </div>
+            <br>
+
+   
+
+            <div class="form-group">
+                <label for="fecha">Seleccione una fecha:</label>
+                <input type="date" id="fecha" name="fecha">
+                <div id="fecha-message" class="message"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="hora">Seleccione una hora:</label>
+                <select id="hora" name="hora">
+                    <option> </option>
+                    <option value="11:00">11:00</option>
+                    <option value="12:00">12:00</option>
+                    <option value="13:00">13:00</option>
+                    <option value="14:00">14:00</option>
+                    <option value="15:00">15:00</option>
+                    <option value="16:00">16:00</option>
+                    <option value="17:00">17:00</option>
+                    <option value="18:00">18:00</option>
+                    <option value="19:00">19:00</option>
+                </select>
+                <div id="hora-message" class="message"></div>
+            </div>
+
+            <button type="button" id="generar-btn">Generar</button>
+        </form>
+
+    </div>
+
+    <div id="qr-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>QR Generado</h3>
+            <div id="qr-code-container"></div>
+            <button id="enviar-correo-btn">Enviar por correo</button>
+            <button id="enviar-btn">Enviar por Whatsapp</button>
+    
+            <div class="checkbox-group" style="margin-top: 20px">
+                <input type="checkbox" id="toggle-email-input">
+                <label for="toggle-email-input">Ingresar correo manualmente</label>
+            </div>
+            <div id="email-input-container" style="display: none;">
+                <input type="email" id="manual-email" placeholder="Ingresa el correo">
+            </div>
+    
+            <div class="checkbox-group" style="margin-top: 20px">
+                <input type="checkbox" id="toggle-phone-input">
+                <label for="toggle-phone-input">Ingresar teléfono manualmente</label>
+            </div>
+            <div id="phone-input-container" style="display: none;">
+                <input type="tel" id="manual-phone" placeholder="Ingresa el número de teléfono">
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <div id="receptor-modal" class="modal">
+        <div class="modal-content" style="width: 80%; max-width: 800px; height: 85%;">
+            <span class="close">&times;</span>
+            <h3>Buscar Receptor</h3>
+
+            <div class="search-container">
+                <input type="text" id="buscar-receptor-input" placeholder="Buscar por nombre o correo...">
+                <br><br>
+            </div>
+
+            <div class="table-container">
+                <table id="receptores-table">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Correo</th>
+                            <th>Seleccionar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="receptores-tbody">
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="pagination" id="receptores-pagination"
+                style="margin-top: 20px; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                <button id="prev-page" disabled class="btn-paginacion">Anterior</button>
+                <button id="next-page" disabled class="btn-paginacion">Siguiente</button>
+            </div>
+            <br>
+            <span id="page-info">Página 1 de 1</span>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
+    <script src="../models/js/Generador.js"></script>
+</body>
+
+</html>
